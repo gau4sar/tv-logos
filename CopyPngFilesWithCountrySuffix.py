@@ -2,67 +2,66 @@ import os
 import shutil
 
 
-def process_country_folder(country_folder, destination_folder):
-    country_name = os.path.basename(country_folder)
-    destination_folder = os.path.join(destination_folder, "logos-with-country-suffix")
+def copy_and_rename_files(source_folder, destination_folder, target_countries):
+    # Iterate over each country folder in the source directory
+    for country_folder in os.listdir(source_folder):
+        country_folder_path = os.path.join(source_folder, country_folder)
 
-    # Create the destination folder if it doesn't exist
-    os.makedirs(destination_folder, exist_ok=True)
+        # Check if it's a directory and if the country is in the target list
+        if os.path.isdir(country_folder_path) and country_folder in target_countries:
+            # Iterate over each file in the country folder
+            for file_name in os.listdir(country_folder_path):
+                file_path = os.path.join(country_folder_path, file_name)
 
-    # Iterate over PNG files in the country folder
-    for file_name in os.listdir(country_folder):
-        if file_name.lower().endswith(".png"):
-            source_path = os.path.join(country_folder, file_name)
-            destination_name = f"{os.path.splitext(file_name)[0]}=={country_name}.png"
-            destination_path = os.path.join(destination_folder, destination_name)
+                # Check if it's a PNG file
+                if file_name.endswith(".png"):
+                    # Generate the new file name with the specified suffix
+                    new_file_name = f"{country_folder}=={file_name}"
 
-            # Copy the file to the new destination
-            shutil.copy2(source_path, destination_path)
-            print(f"Copied: {source_path} to {destination_path}")
+                    # Build the destination path in the all-countries folder
+                    destination_path = os.path.join(destination_folder, new_file_name)
 
-
-def main():
-    base_folder = "tv-logos"
-    countries_list = [
-        "argentina",
-        "australia",
-        "brazil",
-        "bulgaria",
-        "canada",
-        "croatia",
-        "nordic/denmark",
-        "france",
-        "germany",
-        "greece",
-        "indonesia",
-        "israel",
-        "italy",
-        "mexico",
-        "netherlands",
-        "new-zealand",
-        "nordic/norway/",
-        "philippines",
-        "poland",
-        "portugal",
-        "romania",
-        "russia",
-        "serbia",
-        "south-africa",
-        "spain",
-        "turkey",
-        "united-arab-emirates",
-        "united-kingdom",
-        "united-states",
-        "world-middle-east",
-    ]
-
-    for country in countries_list:
-        country_folder = os.path.join(base_folder, "countries", country)
-        if os.path.exists(country_folder):
-            process_country_folder(country_folder, base_folder)
-        else:
-            print(f"Folder not found: {country_folder}")
+                    # Copy the file to the destination with the new name
+                    shutil.copy2(file_path, destination_path)
 
 
-if __name__ == "__main__":
-    main()
+# Specify the paths to your source and destination folders
+source_folder = r"C:\Users\heroi\OneDrive\Desktop\desktop4\projects\github\tv-logos\tv-logos\countries"
+destination_folder = r"C:\Users\heroi\OneDrive\Desktop\desktop4\projects\github\tv-logos\tv-logos\countries\all-countries"
+
+# Specify the list of target countries
+target_countries = [
+    "argentina",
+    "australia",
+    "brazil",
+    "bulgaria",
+    "canada",
+    "croatia",
+    "denmark",
+    "france",
+    "germany",
+    "greece",
+    "indonesia",
+    "israel",
+    "italy",
+    "mexico",
+    "netherlands",
+    "new-zealand",
+    "norway",
+    "philippines",
+    "poland",
+    "portugal",
+    "romania",
+    "russia",
+    "serbia",
+    "south-africa",
+    "spain",
+    "turkey",
+    "united-arab-emirates",
+    "united-kingdom",
+    "united-states",
+    "world-middle-east",
+]
+
+# Call the function to copy and rename files
+copy_and_rename_files(source_folder, destination_folder, target_countries)
